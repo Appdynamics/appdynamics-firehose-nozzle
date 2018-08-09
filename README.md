@@ -41,7 +41,7 @@ Edit run.sh accordingly
 source run.sh
 ```
 
-## Credentials
+## How to find Credentials
 
 
 - NOZZLE_TRAFFIC_CONTROLLER_URL: wss://doppler.sys.pie-20.cfplatformeng.com:443
