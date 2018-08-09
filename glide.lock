@@ -1,0 +1,67 @@
+hash: 2b6c1b52fa1dbf34c73d1ba34c73e789d408b6a935c5f5a908a1661be4bb0d9b
+updated: 2018-08-09T13:40:35.783666-07:00
+imports:
+- name: github.com/Appdynamics/firehose-utils
+  version: dfbdcbb90ab3ed3e9efc8a2154e67feb56d8b541
+  subpackages:
+  - api
+  - config
+  - nozzle
+  - uaa
+  - writernozzle
+- name: github.com/cloudfoundry-community/go-cfclient
+  version: 3805b12f648c81339bca0df4124800e7c9575865
+- name: github.com/cloudfoundry-incubator/uaago
+  version: 1db9cfd27865007e07ffd5914c0fdf5fb7fc09ba
+- name: github.com/cloudfoundry/noaa
+  version: a1d4a94e2be6711111893c59538976d07ef7ea98
+  subpackages:
+  - consumer
+  - consumer/internal
+  - errors
+- name: github.com/cloudfoundry/sonde-go
+  version: 81c3f6be579cf4337477a8b0d03852d0760b5801
+  subpackages:
+  - events
+- name: github.com/gogo/protobuf
+  version: a4cceea7a401a73fefafd1a21fedbd4694124a82
+  subpackages:
+  - gogoproto
+  - proto
+  - protoc-gen-gogo/descriptor
+- name: github.com/golang/protobuf
+  version: c9c7427a2a70d2eb3bafa0ab2dc163e45f143317
+  subpackages:
+  - proto
+- name: github.com/gorilla/websocket
+  version: a69d25be2fe2923a97c2af6849b2f52426f68fc0
+- name: github.com/kelseyhightower/envconfig
+  version: 9aca109c9aec4633fced9717c4a09ecab3d33111
+- name: github.com/pkg/errors
+  version: bfd5150e4e41705ded2129ec33379de1cb90b513
+- name: golang.org/x/net
+  version: 7dbad50ab5b31073856416cdcfeb2796d682f844
+  subpackages:
+  - context
+- name: golang.org/x/oauth2
+  version: 2baa8a1b9338cf13d9eeb27696d761155fa480be
+  subpackages:
+  - clientcredentials
+  - internal
+- name: google.golang.org/appengine
+  version: b79c28f0197795b4050bfcd7c4c2209136c594b1
+  subpackages:
+  - internal
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
+testImports:
+- name: github.com/onsi/ginkgo
+  version: ab07225d112dc7a93c289ac5b2e12735c2c46035
+  subpackages:
+  - extensions/table
+- name: github.com/onsi/gomega
+  version: 4dfabf7db2e4147ec99a86db32b2f2a3484cfee8

@@ -1,0 +1,23 @@
+package: github.com/Appdynamics/appdynamics-firehose-nozzle
+import:
+- package: github.com/Appdynamics/firehose-utils
+  subpackages:
+  - api
+  - config
+  - nozzle
+  - uaa
+  - writernozzle
+- package: github.com/cloudfoundry/noaa
+  version: ~2.1.0
+  subpackages:
+  - consumer
+- package: github.com/cloudfoundry/sonde-go
+  subpackages:
+  - events
+- package: github.com/kelseyhightower/envconfig
+- package: github.com/cloudfoundry-community/go-cfclient
+testImport:
+- package: github.com/onsi/ginkgo
+  subpackages:
+  - extensions/table
+- package: github.com/onsi/gomega
