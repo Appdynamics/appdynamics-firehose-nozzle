@@ -1,10 +1,11 @@
 
 # Steps to build the firehose nozzle and run
 
-https://golang.org/doc/install
 
 
 ## Make sure to install GoLang 1.8+
+
+https://golang.org/doc/install
 
 
 ## Setup GoPATH
