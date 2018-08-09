@@ -1,6 +1,8 @@
 
-# Steps
+# Steps to build the firehose nozzle and run
 
+
+## Make sure to install GoLang 1.8+
 
 
 ## Setup GoPATH
