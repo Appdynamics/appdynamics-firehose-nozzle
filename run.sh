@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
-auth_method="api"
-#auth_method="uaa"
+auth_method="uaa"
 
-if [[ "${auth_method}" == "api" ]]; then
-    echo "Doing API auth"
-    export NOZZLE_API_URL=https://api.bosh-lite.com
-    export NOZZLE_USERNAME=admin
-    export NOZZLE_PASSWORD=admin #admin / admin is the bosh-lite credential set
-else
-    echo "Doing UAA auth"
-    export NOZZLE_UAA_URL=https://uaa.bosh-lite.com
-    export NOZZLE_TRAFFIC_CONTROLLER_URL=wss://doppler.bosh-lite.com:4443
-    export NOZZLE_USERNAME=<username>
-    export NOZZLE_PASSWORD=<password>
+if [[ "${auth_method}" == "api" ]]; then ## ignored
+    echo "Doing API auth" ## ignored
+    export NOZZLE_API_URL=https://api.bosh-lite.com ## ignored
+    export NOZZLE_USERNAME=admin ## ignored
+    export NOZZLE_PASSWORD=admin ## ignored
+
+else ## CHANGE THE FOLLOWING 
+    echo "Doing UAA Auth"
+    export NOZZLE_UAA_URL=https://uaa.<domain>
+    export NOZZLE_TRAFFIC_CONTROLLER_URL=<doppler address>
+    export NOZZLE_USERNAME=<opentsb_firehose_username>
+    export NOZZLE_PASSWORD=<opentsb_firehose_password>
 fi
 
-export NOZZLE_FIREHOSE_SUBSCRIPTION_ID=firehose-subscription-id
+export NOZZLE_FIREHOSE_SUBSCRIPTION_ID=appdynamics.firehose
 export NOZZLE_SKIP_SSL=true
 export NOZZLE_SELECTED_EVENTS=ValueMetric,CounterEvent
 
