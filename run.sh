@@ -16,6 +16,7 @@ else ## CHANGE THE FOLLOWING
     export NOZZLE_PASSWORD=<opentsb_firehose_password>
 fi
 
+export NOZZLE_SINK=STDOUT # one of the following STDOUT|MACHINEAGENT|CONTROLLER|SPLUNK etc...
 export NOZZLE_FIREHOSE_SUBSCRIPTION_ID=appdynamics.firehose
 export NOZZLE_SKIP_SSL=true
 export NOZZLE_SELECTED_EVENTS=ValueMetric,CounterEvent
