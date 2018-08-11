@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 	"errors"
+	"strings"
 
 	"github.com/cloudfoundry/noaa/consumer"
 
@@ -13,7 +14,10 @@ import (
 	"github.com/Appdynamics/firehose-utils/config"
 	"github.com/Appdynamics/firehose-utils/nozzle"
 	"github.com/Appdynamics/firehose-utils/uaa"
-    "github.com/Appdynamics/firehose-utils/writernozzle"
+	"github.com/Appdynamics/firehose-utils/writernozzle"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/sinks"
+	_ "appdynamics"
+
 )
 
 func main() {
@@ -64,17 +68,17 @@ func main() {
 	}, nil)
     eventsChan, errsChan := noaaConsumer.Firehose(conf.FirehoseSubscriptionID, token)
     
-	sink := os.Getenv("NOZZLE_SINK")
+	sink := strings.ToLower(os.Getenv("NOZZLE_SINK"))
     
     var eventSerializer nozzle.EventSerializer
     var sinkWriter nozzle.Client
     switch sink {
-        case "STDOUT":
+        case sinks.Stdout:
             eventSerializer = writernozzle.NewWriterEventSerializer()
             sinkWriter = writernozzle.NewWriterClient(os.Stdout)
-        case "MACHINEAGENT":
+        case sinks.MachineAgent:
             logger.Fatal(errors.New("Not Implemented!"))
-        case "CONTROLLER":
+        case sinks.Controller:
             logger.Fatal(errors.New("Not Implemented!"))
         default:
             logger.Fatal(errors.New("set NOZZLE_SINK environment variable to one of the following STDOUT|MACHINEAGENT|CONTROLLER|SPLUNK"))
