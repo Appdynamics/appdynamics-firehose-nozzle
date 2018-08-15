@@ -3,13 +3,13 @@
 
 ## Edit the following manifest.yml
 ```
-      NOZZLE_UAA_URL: 'https://uaa.<ops domain>'
-      NOZZLE_TRAFFIC_CONTROLLER_URL: 'wss://doppler.<domain>:443'
+      NOZZLE_UAA_URL: 'https://uaa.<ops domain>' # cf curl /v2/info | jq .doppler_logging_endpoint
+      NOZZLE_TRAFFIC_CONTROLLER_URL: 'wss://doppler.<domain>:443' # cf curl /v2/info | jq .token_endpoint 
       NOZZLE_USERNAME: opentsdb-firehose-nozzle
       NOZZLE_PASSWORD: <password>
-      APPD_CONTROLLER: <controller>
-      APPD_ACCESSKEY: <accesskey>
-      APPD_PORT: <port>
+      APPD_CONTROLLER_HOST: <controller>
+      APPD_ACCESS_KEY: <accesskey>
+      APPD_CONTROLLER_PORT: <port>
       APPD_ACCOUNT: <account>
 ```
 
