@@ -36,6 +36,6 @@ cf push
 ```
 
 - *NOZZLE_USERNAME/NOZZLE_PASSWORD* 
-   * **Easy way** login to opsmanager and go to PAS tile -> credentials -> UAA -> Opentsdb Nozzle Credentials -> Copy the username and password. CF environments usually ships with `opentsdb-firehose-nozzle` account which already belongs to doppler.firehose group.  
+   * **Easy way** login to opsmanager and go to PAS tile -> credentials -> UAA -> Opentsdb Nozzle Credentials -> Copy the username and password. CF environments usually ships with `opentsdb-firehose-nozzle` account which already belongs to `doppler.firehose` group.  
    
-   * (or) create a new account in doppler.firehose group with permissions, https://github.com/cf-platform-eng/firehose-nozzle#option-2-uaa-client
+   * (or) create a new account in `doppler.firehose` group with permissions, https://github.com/cf-platform-eng/firehose-nozzle#option-2-uaa-client
