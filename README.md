@@ -19,6 +19,11 @@
 cf push
 ```
 
+## See the metrics
+
+```controller->appd-nozzle[default AppName]->MetricBrowser->Application Infrastructure Performance|appd-nozzle-tier[default tier name]|Individual Nodes```
+
+
 ## How to find Credentials
 
 
@@ -39,3 +44,30 @@ cf push
    * **Easy way** login to opsmanager and go to PAS tile -> credentials -> UAA -> Opentsdb Nozzle Credentials -> Copy the username and password. CF environments usually ships with `opentsdb-firehose-nozzle` account which already belongs to `doppler.firehose` group.  
    
    * (or) create a new account in `doppler.firehose` group with permissions, https://github.com/cf-platform-eng/firehose-nozzle#option-2-uaa-client
+
+
+## Overriding configuration
+
+Although for the most part application creates default configuration, one can over ride the configuration bu setting the following environemnt variables and restaging the application 
+   
+     - `cf set-env appdnozzle <ENVNAME> <NEW ENV VALUE>`
+     - `cf reatge appdnozzle`
+     
+  | Environment Variable          	| Purpose                                                               	| Allowed Values                              	| Default Value    	|
+|-------------------------------	|-----------------------------------------------------------------------	|---------------------------------------------	|------------------	|
+| APPD_NOZZLE_APP_NAME          	| Name of the Nozzle Application under which the metrics are recorded   	| Any string                                  	| appd-nozzle      	|
+| APPD_NOZZLE_TIER_NAME         	| Name of the Nozzle Tier under which the metrics are recorded          	| Any String                                  	| appd-nozzle-tier 	|
+| APPD_NOZZLE_NODE_NAME         	| Name of the Nozzle Node under which the metrics are recorded          	| Any String                                  	| appd-nozzle-node 	|
+| APPD_SSL_ENABLED              	| Enable/Disable SSL to Controller                                      	| true/false                                  	| false            	|
+| APPD_CONTROLLER_HOST          	| Hostname of Appdynamics Controller                                    	| host.appd.com                               	|                  	|
+| APPD_CONTROLLER_PORT          	| Port on which Appdynamics Controller is listening                     	| port number                                 	| 8090             	|
+| APPD_ACCOUNT                  	| Account name for the above controller                                 	| Account name                                	|                  	|
+| APPD_ACCESS_KEY               	| Access Key                                                            	| Access Key                                  	|                  	|
+| APPD_SINK                     	| Sink to which the metrics are to be pushed.                           	| stdout/Controller                           	| Controller       	|
+| APPD_SAMPLING_RATE            	| Polling Interval in secs to Firehose Nozzle.                          	| number of seconds                           	| 2 secs           	|
+| NOZZLE_UAA_URL                	| UAA Api endpoint URL                                                  	| cf curl /v2/info and record UAA endpoint    	|                  	|
+| NOZZLE_TRAFFIC_CONTROLLER_URL 	| Doppler end point URL                                                 	| cf curl /v2/info and record doppler api url 	|                  	|
+| NOZZLE_USERNAME               	| User name of account belonging to doppler.firehose group              	| user name, easy: use opentsb credentials    	|                  	|
+| NOZZLE_PASSWORD               	| Password for the above account                                        	|                                             	|                  	|
+      
+
