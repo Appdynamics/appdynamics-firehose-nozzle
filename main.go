@@ -7,6 +7,7 @@ import (
 	"time"
 	"errors"
 	"strings"
+	"strconv"
 
 	"github.com/cloudfoundry/noaa/consumer"
 
@@ -78,7 +79,11 @@ func main() {
         case sinks.MachineAgent:
             logger.Fatal(errors.New("Not Implemented!"))
 		case sinks.Controller:
-			port := uint16(8090)
+			i, err := strconv.Atoi(os.Getenv("APPD_PORT"))
+			if err != nil {
+				i = 8090
+			}
+			port := uint16(i)
 			host, accesskey, account := os.Getenv("APPD_CONTROLLER"), os.Getenv("APPD_ACCESSKEY"), os.Getenv("APPD_ACCOUNT")
 			useSSL := false	
 			sinkWriter = sinks.NewControllerClient(host, accesskey, account, port, useSSL)
