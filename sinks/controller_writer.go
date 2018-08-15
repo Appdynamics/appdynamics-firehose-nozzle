@@ -1,15 +1,18 @@
 package sinks
 
-import appd "appdynamics"
+import (
+	appd "appdynamics"
+	"log"
+)
 
 type ControllerClient struct{}
 
-func NewControllerClient(host, accessKey, account string, port uint16, useSSL bool) *ControllerClient {
+func NewControllerClient(host, accessKey, account, app, tier, node string, port uint16, useSSL bool, logger *log.Logger) *ControllerClient {
 	cfg := appd.Config{}
 
-	cfg.AppName = "appd-nozzle"
-	cfg.TierName = "nozzle-tier"
-	cfg.NodeName = "nozzle-node"
+	cfg.AppName = app
+	cfg.TierName = tier
+	cfg.NodeName = node
 	cfg.Controller.Host = host
 	cfg.Controller.Port = port
 	cfg.Controller.UseSSL = useSSL
@@ -17,7 +20,7 @@ func NewControllerClient(host, accessKey, account string, port uint16, useSSL bo
 	cfg.Controller.AccessKey = accessKey
 	cfg.InitTimeoutMs = 1000
 	appd.InitSDK(&cfg)
-
+	logger.Println(&cfg.Controller)
 	return &ControllerClient{}
 }
 

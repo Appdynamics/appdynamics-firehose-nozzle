@@ -30,6 +30,7 @@ func main() {
 	if err != nil {
 		logger.Fatal("Unable to build Appdynamics config from environment", err)
 	}
+	logger.Printf("Using Appdynamics Configuration %v", appdConf)
 
 	var token, trafficControllerURL string
 
@@ -68,8 +69,9 @@ func main() {
 		logger.Fatal(errors.New("Not Implemented!"))
 	case sinks.Controller:
 		sinkWriter = sinks.NewControllerClient(appdConf.ControllerHost, appdConf.AccessKey, appdConf.Account,
-			appdConf.ControllerPort, appdConf.SslEnabled)
-		eventSerializer = sinks.NewControllerEventSerializer()
+			appdConf.NozzleAppName, appdConf.NozzleTierName, appdConf.NozzleNodeName,
+			appdConf.ControllerPort, appdConf.SslEnabled, logger)
+		eventSerializer = sinks.NewControllerEventSerializer(appdConf.NozzleTierName)
 	default:
 		logger.Fatal(errors.New("set APPD_SINK environment variable to one of the following stdout|controller|machineagent(WIP)"))
 	}
