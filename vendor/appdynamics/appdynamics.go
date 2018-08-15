@@ -666,6 +666,111 @@ func EndExitcall(exitcall ExitcallHandle) {
     C.appd_exitcall_end(C.uint_to_echandle(C.uintptr_t(exitcall)))
 }
 
+// Specifies how to roll up values for the metric over time. There are three ways in which the Controller can roll up metrics, as follows:
+// APPD_TIMEROLLUP_TYPE_AVERAGE: It can calculate the average of all reported values in the time period.
+// An example of a built-in metric that uses this is the "Average Response Time" metric.
+// APPD_TIMEROLLUP_TYPE_SUM: Sum of all reported values in that minute.
+// This operation behaves like a counter. An example metric is the "Calls per Minute" metric.
+// APPD_TIMEROLLUP_TYPE_CURRENT: Current is the last reported value in the minute.
+// If no value is reported in that minute, the last reported value is used. An example of a metric that uses this would be a machine state metric, such as "Max Available (MB)" metric.
+type RollupType int
+
+const (
+	APPD_TIMEROLLUP_TYPE_AVERAGE RollupType = iota + 1
+	APPD_TIMEROLLUP_TYPE_SUM
+	APPD_TIMEROLLUP_TYPE_CURRENT
+)
+
+func GetCRollupType(rollUp RollupType) C.enum_appd_time_rollup_type {
+	switch rollUp {
+	case APPD_TIMEROLLUP_TYPE_AVERAGE:
+		return C.APPD_TIMEROLLUP_TYPE_AVERAGE
+	case APPD_TIMEROLLUP_TYPE_SUM:
+		return C.APPD_TIMEROLLUP_TYPE_SUM
+	case APPD_TIMEROLLUP_TYPE_CURRENT:
+		return C.APPD_TIMEROLLUP_TYPE_CURRENT
+	}
+    return C.APPD_TIMEROLLUP_TYPE_AVERAGE
+}
+
+// Specifies how to aggregate metric values for the tier (a cluster of nodes).
+// APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL – Aggregates the metric value by averaging the metric values
+// across each node in the tier. For example, "Hardware Resources|Memory|Used %" is a built-in metric
+// that uses the individual rollup type.
+// APPD_CLUSTERROLLUP_TYPE_COLLECTIVE – Aggregates the metric value by adding up the metric values
+// for all the nodes in the tier. For example, "Agent|Metric Upload|Metrics uploaded" is a built-in metric
+// that uses the collective rollup type. 
+type ClusterRollupType int
+
+const (
+	APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL ClusterRollupType = iota + 1
+	APPD_CLUSTERROLLUP_TYPE_COLLECTIVE
+)
+
+func GetCClusterRollupType(rollUp ClusterRollupType) C.enum_appd_cluster_rollup_type {
+	switch rollUp {
+	case APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL:
+		return C.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL
+	case APPD_CLUSTERROLLUP_TYPE_COLLECTIVE:
+		return C.APPD_CLUSTERROLLUP_TYPE_COLLECTIVE
+	}
+    return C.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL
+}
+
+// A particular metric may not report data for a given minute. This configuration tells the Controller how to set
+// the metric's count for that time slice. The count is set to zero if the hole handling type is APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER,
+// and set to one if APPD_HOLEHANDLING_TYPE_RATE_COUNTER. In effect, APPD_HOLEHANDLING_TYPE_RATE_COUNTER does not affect aggregation while
+// APPD_HOLEHANDLING_TYPE_RATE_COUNTER does. 
+type HoleHandlingType int
+
+const (
+	APPD_HOLEHANDLING_TYPE_RATE_COUNTER HoleHandlingType = iota + 1
+	APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER
+)
+
+func GetCHoleHandlingType(counter HoleHandlingType) C.enum_appd_hole_handling_type {
+	switch counter {
+	case APPD_HOLEHANDLING_TYPE_RATE_COUNTER:
+		return C.APPD_HOLEHANDLING_TYPE_RATE_COUNTER
+	case APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER:
+		return C.APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER
+	}
+    return C.APPD_HOLEHANDLING_TYPE_RATE_COUNTER
+}
+
+// Define a custom metric.
+// The API takes ApplicationContext, MetricPath, RollupType which specifies how to rollup
+// metric values for this metric over time, e.g., 
+// to compute the average over time, pass APPD_TIMEROLLUP_TYPE_AVERAGE, ClusterRollUp which specifies
+// how to rollup metric values for this metric across clusters and  HoleHandlingType which specifies
+// how to handle holes (gaps where no value has been reported from this metric
+func AddCustomMetric(applicationContext, metricPath string, rollup RollupType,
+	clusterRollUp ClusterRollupType, holeHandling HoleHandlingType) {
+
+	applicationContext_s := C.CString(applicationContext)
+	defer C.free(unsafe.Pointer(applicationContext_s))
+
+	metricPath_s := C.CString(metricPath)
+	defer C.free(unsafe.Pointer(metricPath_s))
+
+	C.appd_custom_metric_add(applicationContext_s, metricPath_s,
+		GetCRollupType(rollup), GetCClusterRollupType(clusterRollUp),
+		GetCHoleHandlingType(holeHandling))
+}
+
+// Report a value for a given metric.
+// API takes ApplicationContext, MetricPath and the the value to report for the metric.
+// The way the value is aggregated is specified by the roll-up parameters to `AddCustomMetric`
+func ReportCustomMetrics(applicationContext, metricPath string, value int64) {
+	applicationContext_s := C.CString(applicationContext)
+	defer C.free(unsafe.Pointer(applicationContext_s))
+
+	metricPath_s := C.CString(metricPath)
+	defer C.free(unsafe.Pointer(metricPath_s))
+
+	C.appd_custom_metric_report(applicationContext_s, metricPath_s, C.long(value))
+}
+
 func TerminateSDK() {
     C.appd_sdk_term()
 }
