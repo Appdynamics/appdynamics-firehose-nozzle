@@ -22,7 +22,7 @@ cf push
 ## How to find Credentials
 
 
-- *NOZZLE_TRAFFIC_CONTROLLER_URL*  [https://docs.pivotal.io/pivotalcf/2-2/loggregator/architecture.html#components]
+- (NOZZLE_TRAFFIC_CONTROLLER_URL)[https://docs.pivotal.io/pivotalcf/2-2/loggregator/architecture.html#components]
 
 ```
 (master)$ cf curl /v2/info | jq .doppler_logging_endpoint
