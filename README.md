@@ -13,7 +13,7 @@
       APPD_ACCOUNT: <account>
 ```
 
-## push the application
+## Push the application
 
 ```
 cf push
