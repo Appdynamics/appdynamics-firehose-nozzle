@@ -48,7 +48,7 @@ cf push
 
 ## Overriding configuration
 
-Although for the most part application creates default configuration, one can over ride the configuration bu setting the following environemnt variables and restaging the application 
+Although for the most part the nozzle application creates default configuration itself, one can override the configuration by setting the following environemnt variables and restaging the application 
    
      - `cf set-env appdnozzle <ENVNAME> <NEW ENV VALUE>`
      - `cf reatge appdnozzle`
