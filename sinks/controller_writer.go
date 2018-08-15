@@ -15,7 +15,7 @@ func NewControllerClient(host, accessKey, account string, port uint16, useSSL bo
 	cfg.Controller.UseSSL = useSSL
 	cfg.Controller.Account = account
 	cfg.Controller.AccessKey = accessKey
-	cfg.InitTimeoutMs = 1000 
+	cfg.InitTimeoutMs = 1000
 	appd.InitSDK(&cfg)
 
 	return &ControllerClient{}
@@ -31,11 +31,10 @@ func (c *ControllerClient) PostBatch(events []interface{}) error {
 			}
 			if dataPoint.Source == "gorouter" || dataPoint.Source == "uaa" {
 				appd.AddCustomMetric("", dataPoint.Metric, appd.APPD_TIMEROLLUP_TYPE_AVERAGE,
-				appd.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL, appd.APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER)
-	
+					appd.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL, appd.APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER)
+
 				appd.ReportCustomMetrics("", dataPoint.Metric, dataPoint.Value)
 			}
-
 
 		}
 	}

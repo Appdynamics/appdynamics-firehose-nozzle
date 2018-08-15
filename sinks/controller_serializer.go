@@ -8,7 +8,7 @@ import (
 
 type DataPoint struct {
 	Metric, Source string
-	Value int64
+	Value          int64
 }
 
 type ControllerEventSerializer struct{}
@@ -42,8 +42,8 @@ func (w *ControllerEventSerializer) BuildContainerEvent(event *events.Envelope) 
 }
 
 func genericSerializer(event *events.Envelope) *DataPoint {
-		return &DataPoint{
-			Metric: fmt.Sprintf("Server|Component:nozzle-tier|Custom Metrics|%v|%v|%v", event.GetOrigin(), event.GetDeployment(), event.GetIndex()),
-			Value: int64(event.GetValueMetric().GetValue()),
-			Source: event.GetOrigin()}
+	return &DataPoint{
+		Metric: fmt.Sprintf("Server|Component:nozzle-tier|Custom Metrics|%v|%v|%v", event.GetOrigin(), event.GetDeployment(), event.GetIndex()),
+		Value:  int64(event.GetValueMetric().GetValue()),
+		Source: event.GetOrigin()}
 }
