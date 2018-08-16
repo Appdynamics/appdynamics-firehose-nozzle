@@ -55,9 +55,9 @@ Although for the most part the nozzle application creates default configuration 
      
   | Environment Variable          	| Purpose                                                               	| Allowed Values                              	| Default Value    	|
 |-------------------------------	|-----------------------------------------------------------------------	|---------------------------------------------	|------------------	|
-| APPD_NOZZLE_APP_NAME          	| Name of the Nozzle Application under which the metrics are recorded   	| Any string                                  	| appd-nozzle      	|
-| APPD_NOZZLE_TIER_NAME         	| Name of the Nozzle Tier under which the metrics are recorded          	| Any String                                  	| appd-nozzle-tier 	|
-| APPD_NOZZLE_NODE_NAME         	| Name of the Nozzle Node under which the metrics are recorded          	| Any String                                  	| appd-nozzle-node 	|
+| APPD_NOZZLE_APP          	     | Name of the Nozzle Application under which the metrics are recorded   	| Any string                                     	| appd-nozzle      	|
+| APPD_NOZZLE_TIER            	| Name of the Nozzle Tier under which the metrics are recorded          	| Any String                                     	| appd-nozzle-tier 	|
+| APPD_NOZZLE_NODE             	| Name of the Nozzle Node under which the metrics are recorded          	| Any String                                  	| appd-nozzle-node 	|
 | APPD_SSL_ENABLED              	| Enable/Disable SSL to Controller                                      	| true/false                                  	| false            	|
 | APPD_CONTROLLER_HOST          	| Hostname of Appdynamics Controller                                    	| host.appd.com                               	|                  	|
 | APPD_CONTROLLER_PORT          	| Port on which Appdynamics Controller is listening                     	| port number                                 	| 8090             	|
