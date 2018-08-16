@@ -12,6 +12,7 @@ applications:
       NOZZLE_PASSWORD: JNdf0zKqb4SYDlKIjZP8q976_-x2kdkV
       NOZZLE_FIREHOSE_SUBSCRIPTION_ID: appdynamics.firehose
       NOZZLE_SKIP_SSL: true
+      NOZZLE_SELECTED_EVENTS: ValueMetric,ContainerMetric,CounterEvent
       APPD_CONTROLLER_HOST: master-onprem-controller.e2e.appd-test.com
       APPD_ACCESS_KEY: 76d63d49-8e86-42af-91b1-54fbbbd607c2
       APPD_CONTROLLER_PORT: 8090

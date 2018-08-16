@@ -5,7 +5,10 @@ import (
 	"log"
 )
 
-type ControllerClient struct{ logger *log.Logger }
+type ControllerClient struct {
+	logger     *log.Logger
+	regMetrics map[string]bool
+}
 
 func NewControllerClient(host, accessKey, account, app, tier, node string, port uint16, useSSL bool, logger *log.Logger) *ControllerClient {
 	cfg := appd.Config{}
@@ -21,7 +24,7 @@ func NewControllerClient(host, accessKey, account, app, tier, node string, port 
 	cfg.InitTimeoutMs = 1000
 	appd.InitSDK(&cfg)
 	logger.Println(&cfg.Controller)
-	return &ControllerClient{logger: logger}
+	return &ControllerClient{logger: logger, regMetrics: make(map[string]bool)}
 }
 
 func (c *ControllerClient) PostBatch(events []interface{}) error {
@@ -34,10 +37,13 @@ func (c *ControllerClient) PostBatch(events []interface{}) error {
 			}
 
 			if dataPoint.Allowed {
-				appd.AddCustomMetric("", dataPoint.Metric, appd.APPD_TIMEROLLUP_TYPE_AVERAGE,
-					appd.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL, appd.APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER)
-
-				c.logger.Printf("Posting %v with value %v", dataPoint.Metric, dataPoint.Value)
+				_, pres := c.regMetrics[dataPoint.Metric]
+				if !pres {
+					c.logger.Printf("Registering Metric: %v", dataPoint.Metric)
+					appd.AddCustomMetric("", dataPoint.Metric, appd.APPD_TIMEROLLUP_TYPE_AVERAGE,
+						appd.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL, appd.APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER)
+					c.regMetrics[dataPoint.Metric] = true
+				}
 				appd.ReportCustomMetrics("", dataPoint.Metric, dataPoint.Value)
 			}
 		}
