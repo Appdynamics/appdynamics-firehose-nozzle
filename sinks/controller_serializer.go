@@ -31,7 +31,6 @@ func (w *ControllerEventSerializer) BuildLogMessageEvent(event *events.Envelope)
 }
 
 func (w *ControllerEventSerializer) BuildValueMetricEvent(event *events.Envelope) interface{} {
-	fmt.Println(event)
 	origin, name, deployment, index := event.GetOrigin(), event.GetValueMetric().GetName(), event.GetDeployment(), event.GetIndex()
 	job := event.GetJob()
 	alias, present := FilterMetrics(origin, name)
