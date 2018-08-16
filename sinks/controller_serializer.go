@@ -22,12 +22,12 @@ func NewControllerEventSerializer(tier_name string) *ControllerEventSerializer {
 
 func (w *ControllerEventSerializer) BuildHttpStartStopEvent(event *events.Envelope) interface{} {
 	allowed := false
-	return &DataPoint{Metric: "", Value: int64(0), Allowed: present}
+	return &DataPoint{Metric: "", Value: int64(0), Allowed: allowed}
 }
 
 func (w *ControllerEventSerializer) BuildLogMessageEvent(event *events.Envelope) interface{} {
 	allowed := false
-	return &DataPoint{Metric: "", Value: int64(0), Allowed: present}
+	return &DataPoint{Metric: "", Value: int64(0), Allowed: allowed}
 }
 
 func (w *ControllerEventSerializer) BuildValueMetricEvent(event *events.Envelope) interface{} {
@@ -60,12 +60,12 @@ func (w *ControllerEventSerializer) BuildCounterEvent(event *events.Envelope) in
 
 func (w *ControllerEventSerializer) BuildErrorEvent(event *events.Envelope) interface{} {
 	allowed := false
-	return &DataPoint{Metric: "", Value: int64(0), Allowed: present}
+	return &DataPoint{Metric: "", Value: int64(0), Allowed: allowed}
 }
 
 func (w *ControllerEventSerializer) BuildContainerEvent(event *events.Envelope) interface{} {
 	allowed := false
-	return &DataPoint{Metric: "", Value: int64(0), Allowed: present}
+	return &DataPoint{Metric: "", Value: int64(0), Allowed: allowed}
 }
 
 func FilterMetrics(eventOrigin, eventName string) (string, bool) {
