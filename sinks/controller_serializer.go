@@ -31,12 +31,15 @@ func (w *ControllerEventSerializer) BuildLogMessageEvent(event *events.Envelope)
 }
 
 func (w *ControllerEventSerializer) BuildValueMetricEvent(event *events.Envelope) interface{} {
+	fmt.Println(event)
 	origin, name, deployment, index := event.GetOrigin(), event.GetValueMetric().GetName(), event.GetDeployment(), event.GetIndex()
+	job := event.GetJob()
 	alias, present := FilterMetrics(origin, name)
-	prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics", w.tier)
+	prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics|PCF Firehose Monitor", w.tier)
+	metric_name := fmt.Sprintf("%v.%v", origin, name)
 	if present {
 		return &DataPoint{
-			Metric:  fmt.Sprintf("%v|%v|%v|%v|%v", prefix, alias, name, deployment, index),
+			Metric:  fmt.Sprintf("%v|%v|%v|%v|%v|%v|%v", prefix, alias, origin, deployment, job, index, metric_name),
 			Value:   int64(event.GetValueMetric().GetValue()),
 			Allowed: present}
 	} else {
@@ -46,11 +49,13 @@ func (w *ControllerEventSerializer) BuildValueMetricEvent(event *events.Envelope
 
 func (w *ControllerEventSerializer) BuildCounterEvent(event *events.Envelope) interface{} {
 	origin, name, deployment, index := event.GetOrigin(), event.GetCounterEvent().GetName(), event.GetDeployment(), event.GetIndex()
+	job := event.GetJob()
 	alias, present := FilterMetrics(origin, name)
-	prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics", w.tier)
+	prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics|PCF Firehose Monitor", w.tier)
+	metric_name := fmt.Sprintf("%v.%v", origin, name)
 	if present {
 		return &DataPoint{
-			Metric:  fmt.Sprintf("%v|%v|%v|%v|%v", prefix, alias, name, deployment, index),
+			Metric:  fmt.Sprintf("%v|%v|%v|%v|%v|%v|%v", prefix, alias, origin, deployment, job, index, metric_name),
 			Value:   int64(event.GetCounterEvent().GetDelta()),
 			Allowed: present}
 	} else {
