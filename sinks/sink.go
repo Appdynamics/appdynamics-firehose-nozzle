@@ -5,8 +5,7 @@ const Stdout string = "stdout"
 const MachineAgent string = "machineagent"
 const Controller string = "controller"
 
-
-// Metrics we are interested in ...  <metric origin>: [<name of the metric>]
+// Metrics we are interested in ...  {<metric origin>: [<name of the metric>]}
 var MetricFilter = map[string][]string{
 	"gorouter":      []string{"file_descriptors", "backend_exhausted_conns", "latency", "ms_since_last_registry_update", "bad_gateways", "responses.5xx", "registry_message.route-emitter", "total_requests", "total_routes", "latency.uaa"},
 	"mysql":         []string{"/mysql/available", "/mysql/galera/wsrep_ready", "/mysql/galera/wsrep_cluster_size", "/mysql/galera/wsrep_cluster_status", "/mysql/net/connections", "/mysql/performance/questions", "/mysql/performance/busy_time"},

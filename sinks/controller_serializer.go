@@ -31,31 +31,25 @@ func (w *ControllerEventSerializer) BuildLogMessageEvent(event *events.Envelope)
 }
 
 func (w *ControllerEventSerializer) BuildValueMetricEvent(event *events.Envelope) interface{} {
-	origin, name, deployment, index := event.GetOrigin(), event.GetValueMetric().GetName(), event.GetDeployment(), event.GetIndex()
-	job := event.GetJob()
-	alias, present := FilterMetrics(origin, name)
-	prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics|PCF Firehose Monitor", w.tier)
-	metric_name := fmt.Sprintf("%v.%v", origin, name)
-	if present {
-		return &DataPoint{
-			Metric:  fmt.Sprintf("%v|%v|%v|%v|%v|%v|%v", prefix, alias, origin, deployment, job, index, metric_name),
-			Value:   int64(event.GetValueMetric().GetValue()),
-			Allowed: present}
-	} else {
-		return &DataPoint{Metric: "", Value: int64(0), Allowed: present}
-	}
+	valueMetric := event.GetValueMetric()
+	return w.makeDataPoint(valueMetric.GetName(), int64(valueMetric.GetValue()), event)
 }
 
 func (w *ControllerEventSerializer) BuildCounterEvent(event *events.Envelope) interface{} {
-	origin, name, deployment, index := event.GetOrigin(), event.GetCounterEvent().GetName(), event.GetDeployment(), event.GetIndex()
-	job := event.GetJob()
+	counterMetric := event.GetCounterEvent()
+	return w.makeDataPoint(counterMetric.GetName(), int64(counterMetric.GetDelta()), event)
+}
+
+func (w *ControllerEventSerializer) makeDataPoint(name string, value int64, event *events.Envelope) *DataPoint {
+	origin := event.GetOrigin()
 	alias, present := FilterMetrics(origin, name)
-	prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics|PCF Firehose Monitor", w.tier)
-	metric_name := fmt.Sprintf("%v.%v", origin, name)
 	if present {
+		deployment, index, job := event.GetDeployment(), event.GetIndex(), event.GetJob()
+		prefix := fmt.Sprintf("Server|Component:%v|Custom Metrics|PCF Firehose Monitor", w.tier)
+		metric_name := fmt.Sprintf("%v.%v", origin, name)
 		return &DataPoint{
 			Metric:  fmt.Sprintf("%v|%v|%v|%v|%v|%v|%v", prefix, alias, origin, deployment, job, index, metric_name),
-			Value:   int64(event.GetCounterEvent().GetDelta()),
+			Value:   value,
 			Allowed: present}
 	} else {
 		return &DataPoint{Metric: "", Value: int64(0), Allowed: present}
