@@ -3,7 +3,7 @@
 
 ## PRE-REQUISITE
 
--  Downlaod [Appdynamics GoLang SDK for linux x64](https://download.appdynamics.com/download/#version=&apm=golang-sdk)
+-  Download [Appdynamics GoLang SDK for linux x64](https://download.appdynamics.com/download/#version=&apm=golang-sdk)
 - `tar zxvf golang-sdk-x64-linux-4.5.1.0.tar`
 -  `cp -r lib vendor/appdynamics/`
 
