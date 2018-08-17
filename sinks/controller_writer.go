@@ -28,7 +28,7 @@ func NewControllerClient(host, accessKey, account, app, tier, node string, port 
 }
 
 func (c *ControllerClient) PostBatch(events []interface{}) error {
-	bt := appd.StartBT("my bt", "")
+	bt := appd.StartBT("PostBatch", "")
 	for _, event := range events {
 		if event != nil {
 			dataPoint, ok := event.(*DataPoint)
