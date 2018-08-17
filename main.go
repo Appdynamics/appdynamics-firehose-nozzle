@@ -53,9 +53,7 @@ func main() {
 
 	logger.Printf("Consuming firehose: %v\n", trafficControllerURL)
 
-	noaaConsumer := consumer.New(trafficControllerURL, &tls.Config{
-		InsecureSkipVerify: conf.SkipSSL,
-	}, nil)
+	noaaConsumer := consumer.New(trafficControllerURL, &tls.Config{InsecureSkipVerify: conf.SkipSSL}, nil)
 	eventsChan, errsChan := noaaConsumer.Firehose(conf.FirehoseSubscriptionID, token)
 
 	var eventSerializer nozzle.EventSerializer
@@ -65,21 +63,24 @@ func main() {
 	case sinks.Stdout:
 		eventSerializer = writernozzle.NewWriterEventSerializer()
 		sinkWriter = writernozzle.NewWriterClient(os.Stdout)
-	case sinks.MachineAgent:
-		logger.Fatal(errors.New("Not Implemented!"))
 	case sinks.Controller:
-		sinkWriter = sinks.NewControllerClient(appdConf.ControllerHost, appdConf.AccessKey, appdConf.Account,
-			appdConf.NozzleAppName, appdConf.NozzleTierName, appdConf.NozzleNodeName,
-			appdConf.ControllerPort, appdConf.SslEnabled, logger)
+		sinkWriter = sinks.NewControllerClient(appdConf.ControllerHost,
+			appdConf.AccessKey,
+			appdConf.Account,
+			appdConf.NozzleAppName,
+			appdConf.NozzleTierName,
+			appdConf.NozzleNodeName,
+			appdConf.ControllerPort,
+			appdConf.SslEnabled,
+			logger)
 		eventSerializer = sinks.NewControllerEventSerializer(appdConf.NozzleTierName)
 	default:
-		logger.Fatal(errors.New("set APPD_SINK environment variable to one of the following stdout|controller|machineagent(WIP)"))
+		logger.Fatal(errors.New("set APPD_SINK environment variable to one of the following stdout|controller"))
 	}
 
 	logger.Printf("Forwarding events to %s: %s", appdConf.Sink, conf.SelectedEvents)
 
 	flush_time := appdConf.SamplingRate
-
 	forwarder := nozzle.NewForwarder(sinkWriter, eventSerializer,
 		conf.SelectedEvents, eventsChan, errsChan, logger)
 
