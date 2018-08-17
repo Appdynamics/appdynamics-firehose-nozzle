@@ -1,6 +1,12 @@
 # appdynamics-firehose-nozzle
 
 
+## PRE-REQUISITE
+
+-  Downlaod golang sdk for linux x64
+- `tar zxvf golang-sdk-x64-linux-4.5.1.0.tar`
+-  `cp -r lib vendor/appdynamics/`
+
 ## Edit the following manifest.yml
 ```
       NOZZLE_UAA_URL: 'https://uaa.<ops domain>' # cf curl /v2/info | jq .doppler_logging_endpoint
