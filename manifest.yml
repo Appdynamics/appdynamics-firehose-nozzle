@@ -6,13 +6,19 @@ applications:
     env:
       GOVERSION: go1.8
       LD_LIBRARY_PATH: /app/vendor/appdynamics/lib
-      NOZZLE_UAA_URL: "https://uaa.<domain>"
-      NOZZLE_TRAFFIC_CONTROLLER_URL: "wss://doppler.<domain>:<port>"
+      NOZZLE_UAA_URL: "https://uaa.sys.pie-multi-az-blue.cfplatformeng.com"
+      NOZZLE_TRAFFIC_CONTROLLER_URL: "wss://doppler.sys.pie-multi-az-blue.cfplatformeng.com:443"
       NOZZLE_USERNAME: opentsdb-firehose-nozzle
-      NOZZLE_PASSWORD: <passwd>
+      NOZZLE_PASSWORD: JNdf0zKqb4SYDlKIjZP8q976_-x2kdkV
       NOZZLE_FIREHOSE_SUBSCRIPTION_ID: appdynamics.firehose
       NOZZLE_SKIP_SSL: true
       APPD_CONTROLLER_HOST: <controller>
       APPD_ACCESS_KEY: <accessKey>
       APPD_CONTROLLER_PORT: <port>
       APPD_ACCOUNT: <account>
+      NOZZLE_SELECTED_EVENTS: ValueMetric,ContainerMetric,CounterEvent
+      APPD_CONTROLLER_HOST: master-onprem-controller.e2e.appd-test.com
+      APPD_ACCESS_KEY: 76d63d49-8e86-42af-91b1-54fbbbd607c2
+      APPD_CONTROLLER_PORT: 8090
+      APPD_ACCOUNT: customer1
+
