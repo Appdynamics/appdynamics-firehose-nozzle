@@ -1,20 +1,18 @@
 ---
 applications:
-  - name: appdnozzle2
+  - name: appdnozzle
     buildpack: https://github.com/cloudfoundry/go-buildpack.git
     health-check-type: process
     env:
       GOVERSION: go1.8
       LD_LIBRARY_PATH: /app/vendor/appdynamics/lib
-      NOZZLE_UAA_URL: 
-      NOZZLE_TRAFFIC_CONTROLLER_URL: 
+      NOZZLE_UAA_URL: "https://uaa.<domain>"
+      NOZZLE_TRAFFIC_CONTROLLER_URL: "wss://doppler.<domain>:<port>"
       NOZZLE_USERNAME: opentsdb-firehose-nozzle
-      NOZZLE_PASSWORD: 
+      NOZZLE_PASSWORD: <passwd>
       NOZZLE_FIREHOSE_SUBSCRIPTION_ID: appdynamics.firehose
       NOZZLE_SKIP_SSL: true
-      NOZZLE_SELECTED_EVENTS: ValueMetric,ContainerMetric,CounterEvent
-      APPD_CONTROLLER_HOST: 
-      APPD_ACCESS_KEY: 
-      APPD_CONTROLLER_PORT: 
-      APPD_ACCOUNT: 
-
+      APPD_CONTROLLER_HOST: <controller>
+      APPD_ACCESS_KEY: <accessKey>
+      APPD_CONTROLLER_PORT: <port>
+      APPD_ACCOUNT: <account>
