@@ -44,7 +44,7 @@ func (c *ControllerClient) PostBatch(events []interface{}) error {
 						appd.APPD_CLUSTERROLLUP_TYPE_INDIVIDUAL, appd.APPD_HOLEHANDLING_TYPE_REGULAR_COUNTER)
 					c.regMetrics[dataPoint.Metric] = true
 				}
-				appd.ReportCustomMetrics("", dataPoint.Metric, dataPoint.Value)
+				appd.ReportCustomMetric("", dataPoint.Metric, dataPoint.Value)
 			}
 		}
 	}

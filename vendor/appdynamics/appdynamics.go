@@ -761,7 +761,7 @@ func AddCustomMetric(applicationContext, metricPath string, rollup RollupType,
 // Report a value for a given metric.
 // API takes ApplicationContext, MetricPath and the the value to report for the metric.
 // The way the value is aggregated is specified by the roll-up parameters to `AddCustomMetric`
-func ReportCustomMetrics(applicationContext, metricPath string, value int64) {
+func ReportCustomMetric(applicationContext, metricPath string, value int64) {
 	applicationContext_s := C.CString(applicationContext)
 	defer C.free(unsafe.Pointer(applicationContext_s))
 
