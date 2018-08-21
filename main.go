@@ -3,23 +3,23 @@ package main
 import (
 	"crypto/tls"
 	"errors"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/appdconfig"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/config"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/nozzle"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/sinks"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/uaa"
+	"github.com/Appdynamics/appdynamics-firehose-nozzle/writernozzle"
 	"log"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/cloudfoundry/noaa/consumer"
-
-	"github.com/Appdynamics/appdynamics-firehose-nozzle/appdconfig"
-	"github.com/Appdynamics/appdynamics-firehose-nozzle/sinks"
-	"github.com/Appdynamics/firehose-utils/config"
-	"github.com/Appdynamics/firehose-utils/nozzle"
-	"github.com/Appdynamics/firehose-utils/uaa"
-	"github.com/Appdynamics/firehose-utils/writernozzle"
 )
 
 func main() {
-	logger := log.New(os.Stdout, ">>> ", 0)
+	logger := log.New(os.Stdout, "[APPD_NOZZLE]>>>",
+		log.Ldate|log.Ltime|log.Lmicroseconds|log.Llongfile)
 
 	conf, err := config.Parse()
 	if err != nil {

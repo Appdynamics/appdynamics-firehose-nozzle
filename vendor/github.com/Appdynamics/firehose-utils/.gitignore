@@ -1,7 +1,0 @@
-.idea
-
-scripts/dev*.sh
-!scripts/dev_boshlite.sh
-manifest.yml
-
-main

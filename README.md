@@ -1,79 +1,132 @@
-# appdynamics-firehose-nozzle
+## Firehose Nozzle
 
+A minimal example for connecting to Cloud Foundry's
+[Loggregator](https://github.com/cloudfoundry/loggregator)
+system.
 
-## PRE-REQUISITE
+### Setup
+This code uses [Glide](https://glide.sh/) for dependency management.
+After you [install Glide](https://glide.sh/), run `glide install` to
+install the Firehose Nozzle dependencies. After that, a `go install`
+should build and install the `firehose-nozzle` executable.
 
--  Download [Appdynamics GoLang SDK for linux x64](https://download.appdynamics.com/download/#version=&apm=golang-sdk)
-- `tar zxvf golang-sdk-x64-linux-4.5.1.0.tar`
--  `cp -r lib vendor/appdynamics/`
+Ensure that you have installed firehose-nozzle using `go get github.com/cf-platform-eng/firehose-nozzle`,
+this will put the dependent packages in the right place.
 
-## Edit the following manifest.yml
+There are two options for creating credentials that can talk to the API:
+* UAA API user account (choose this route unless you have a reason not to)
+* UAA Client
+
+#### Option 1: UAA API User Account
+
+Create a UAA user with access to the Firehose and Cloud Controller:
+
+* Install the UAA CLI, uaac.
 ```
-      NOZZLE_UAA_URL: 'https://uaa.<ops domain>' # cf curl /v2/info | jq .doppler_logging_endpoint
-      NOZZLE_TRAFFIC_CONTROLLER_URL: 'wss://doppler.<domain>:443' # cf curl /v2/info | jq .token_endpoint 
-      NOZZLE_USERNAME: opentsdb-firehose-nozzle
-      NOZZLE_PASSWORD: <password>
-      APPD_CONTROLLER_HOST: <controller>
-      APPD_ACCESS_KEY: <accesskey>
-      APPD_CONTROLLER_PORT: <port>
-      APPD_ACCOUNT: <account>
-```
-
-## Push the application
-
-```
-cf push
-```
-
-## See the metrics
-
-```controller->appd-nozzle[default AppName]->MetricBrowser->Application Infrastructure Performance|appd-nozzle-tier[default tier name]|Individual Nodes```
-
-
-## How to find Credentials
-
-
-- [NOZZLE_TRAFFIC_CONTROLLER_URL](https://docs.pivotal.io/pivotalcf/2-2/loggregator/architecture.html#components)
-
-```
-(master)$ cf curl /v2/info | jq .doppler_logging_endpoint
-"wss://doppler.sys.pie-20.cfplatformeng.com:443"
+gem install cf-uaac
 ```
 
-- *NOZZLE_UAA_URL* 
+* Use the uaac target uaa.YOUR-SYSTEM-DOMAIN command to target your UAA server.
 ```
-(master)$ cf curl /v2/info | jq .token_endpoint
-"https://uaa.sys.pie-multi-az-blue.cfplatformeng.com"
+uaac target uaa.sys.example.com
 ```
 
-- *NOZZLE_USERNAME/NOZZLE_PASSWORD* 
-   * **Easy way** login to opsmanager and go to PAS tile -> credentials -> UAA -> Opentsdb Nozzle Credentials -> Copy the username and password. CF environments usually ships with `opentsdb-firehose-nozzle` account which already belongs to `doppler.firehose` group.  
-   
-   * (or) create a new account in `doppler.firehose` group with permissions, https://github.com/cf-platform-eng/firehose-nozzle#option-2-uaa-client
+* Record the uaa:admin:client_secret from either
+    * The cf deployment manifest or
+    *  The Ops Manager UI, click on Pivotal Elastic Runtime tile, go to credentials tab, UAA -> Admin Client Credentials
+
+* Authenticate to UAA using the client_secret from the previous step
+```
+uaac token client get admin -s ADMIN-CLIENT-SECRET
+```
+
+* Create a Nozzle user for your app with the password of your choosing.
+```
+uaac -t user add my-firehose-nozzle-user --password PASSWORD --emails na
+```
+
+* Add the user to the Cloud Controller Admin Read-Only group.
+```
+uaac -t member add cloud_controller.admin_read_only my-firehose-nozzle-user
+```
+
+* Add the user to the Doppler Firehose group.
+```
+uaac -t member add doppler.firehose my-firehose-nozzle-user
+```
 
 
-## Overriding configuration
+#### Option 2: UAA Client
 
-Although for the most part the nozzle application creates default configuration itself, one can override the configuration by setting the following environemnt variables and restaging the application 
-   
-     - cf set-env appdnozzle <ENVNAME> <NEW ENV VALUE>
-     - cf restage appdnozzle
-     
-  | Environment Variable          	| Purpose                                                               	| Allowed Values                              	| Default Value    	|
-|-------------------------------	|-----------------------------------------------------------------------	|---------------------------------------------	|------------------	|
-| APPD_NOZZLE_APP          	     | Name of the Nozzle Application under which the metrics are recorded   	| Any string                                     	| appd-nozzle      	|
-| APPD_NOZZLE_TIER            	| Name of the Nozzle Tier under which the metrics are recorded          	| Any String                                     	| appd-nozzle-tier 	|
-| APPD_NOZZLE_NODE             	| Name of the Nozzle Node under which the metrics are recorded          	| Any String                                  	| appd-nozzle-node 	|
-| APPD_SSL_ENABLED              	| Enable/Disable SSL to Controller                                      	| true/false                                  	| false            	|
-| APPD_CONTROLLER_HOST          	| Hostname of Appdynamics Controller                                    	| host.appd.com                               	|                  	|
-| APPD_CONTROLLER_PORT          	| Port on which Appdynamics Controller is listening                     	| port number                                 	| 8090             	|
-| APPD_ACCOUNT                  	| Account name for the above controller                                 	| Account name                                	|                  	|
-| APPD_ACCESS_KEY               	| Access Key                                                            	| Access Key                                  	|                  	|
-| APPD_SINK                     	| Sink to which the metrics are to be pushed.                           	| stdout/Controller                           	| Controller       	|
-| APPD_SAMPLING_RATE            	| Polling Interval in secs to Firehose Nozzle.                          	| number of seconds                           	| 2 secs           	|
-| NOZZLE_UAA_URL                	| UAA Api endpoint URL                                                  	| cf curl /v2/info and record UAA endpoint    	|                  	|
-| NOZZLE_TRAFFIC_CONTROLLER_URL 	| Doppler end point URL                                                 	| cf curl /v2/info and record doppler api url 	|                  	|
-| NOZZLE_USERNAME               	| User name of account belonging to doppler.firehose group              	| user name, easy: use opentsb credentials    	|                  	|
-| NOZZLE_PASSWORD               	| Password for the above account                                        	|                                             	|                  	|
-      
+Create a UAA client with access to the Firehose and Cloud Controller:
 
+* Install the UAA CLI, uaac.
+```
+gem install cf-uaac
+```
+
+* Use the uaac target uaa.YOUR-SYSTEM-DOMAIN command to target your UAA server.
+```
+uaac target uaa.sys.example.com
+```
+
+* Record the uaa:admin:client_secret from either
+    * The cf deployment manifest or
+    *  The Ops Manager UI, click on Pivotal Elastic Runtime tile, go to credentials tab, UAA -> Admin Client Credentials
+
+* Authenticate to UAA using the client_secret from the previous step
+```
+uaac token client get admin -s ADMIN-CLIENT-SECRET
+```
+
+* Create a new UAA client for your firehose
+```
+uaac client add my-firehose-nozzle \
+    --access_token_validity 1209600 \
+    --authorized_grant_types authorization_code,client_credentials,refresh_token \
+    -s <SECRET> \
+    --scope openid,oauth.approvals,doppler.firehose \
+    --authorities oauth.login,doppler.firehose
+```
+
+For information about creating a UAA user, see the [Creating and Managing Users with the UAA CLI](http://docs.pivotal.io/pivotalcf/adminguide/uaa-user-management.html) topic.
+
+### Development
+
+For development against
+[bosh-lite](https://github.com/cloudfoundry/bosh-lite),
+copy `scripts/dev.sh.template` to `scripts/dev.sh` and supply missing values.
+Then run `./scripts/dev.sh` to see events on standard out.
+
+Install dependencies
+```bash
+glide install
+```
+
+Setup Tests
+```bash
+go get github.com/onsi/ginkgo/ginkgo  # installs the ginkgo CLI
+go get github.com/onsi/gomega         # fetches the matcher library
+```
+
+Run test
+from toplevel directory
+```bash
+run ginkgo -r  -skipPackage vendor/   # runs test recursively
+```
+
+
+### References
+
+Other nozzles
+* https://github.com/cloudfoundry-incubator/datadog-firehose-nozzle
+* https://github.com/cloudfoundry-incubator/datadog-firehose-nozzle-release
+* https://github.com/cloudfoundry-community/splunk-firehose-nozzle
+* https://github.com/cloudfoundry-community/splunk-firehose-nozzle-release
+* https://github.com/cloudfoundry-community/firehose-to-syslog
+* https://github.com/cloudfoundry/firehose-plugin
+* https://github.com/rakutentech/kafka-firehose-nozzle
+* https://github.com/pivotal-cf/graphite-nozzle
+
+General
+* https://github.com/cloudfoundry/dropsonde-protocol/tree/master/events

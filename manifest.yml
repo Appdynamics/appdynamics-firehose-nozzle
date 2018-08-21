@@ -1,8 +1,9 @@
 ---
 applications:
-  - name: appdnozzle
+  - name: testappdnozzle
     buildpack: https://github.com/cloudfoundry/go-buildpack.git
     health-check-type: process
+    no-route: true
     env:
       GOVERSION: go1.8
       LD_LIBRARY_PATH: /app/vendor/appdynamics/lib
