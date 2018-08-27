@@ -1,1 +1,0 @@
-web: appdynamics-firehose-nozzle
